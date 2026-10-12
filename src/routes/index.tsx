@@ -5,7 +5,6 @@ import { StatusBadge } from "@/components/fairlane/StatusBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
 import { relTime, useJobs } from "@/lib/job-store";
-import { canCancel } from "@/lib/job-validation";
 import { openNewJob } from "@/components/fairlane/NewJobDialog";
 import { btn } from "@/components/fairlane/buttons";
 import {
