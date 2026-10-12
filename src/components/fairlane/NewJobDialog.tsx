@@ -125,7 +125,7 @@ function inputCls(error?: string) {
   return `w-full rounded-md border bg-surface px-3 py-2 text-label text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 ${error ? "border-error focus:ring-error/30" : "border-input focus:border-primary focus:ring-primary/20"}`;
 }
 
-function Field({ label, required, error, help, children }: { label: string; required?: boolean; error?: string; help?: string; children: React.ReactNode }) {
+function Field({ label, required, error, help, children }: { label: string; required?: boolean | undefined; error?: string | undefined; help?: string | undefined; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <span className="text-label text-subtle-foreground">

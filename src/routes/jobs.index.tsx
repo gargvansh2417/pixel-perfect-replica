@@ -15,13 +15,13 @@ import type { JobStatus } from "@/lib/sample-data";
 const STATES: JobStatus[] = ["PENDING", "QUEUED", "ASSIGNED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED"];
 const PAGE = 20;
 
-interface Search { q?: string; status?: string; user?: string }
+interface Search { q?: string | undefined; status?: string | undefined; user?: string | undefined }
 
 export const Route = createFileRoute("/jobs/")({
   validateSearch: (s: Record<string, unknown>): Search => ({
-    q: typeof s.q === "string" ? s.q : undefined,
-    status: typeof s.status === "string" ? s.status : undefined,
-    user: typeof s.user === "string" ? s.user : undefined,
+    q: typeof s["q"] === "string" ? s["q"] : undefined,
+    status: typeof s["status"] === "string" ? s["status"] : undefined,
+    user: typeof s["user"] === "string" ? s["user"] : undefined,
   }),
   head: () => ({
     meta: [

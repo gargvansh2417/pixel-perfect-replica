@@ -49,11 +49,11 @@ function stamp(t: number) {
 }
 
 function buildJob(i: number, status: JobStatus, now: number): FullJob {
-  const user = users[i % users.length];
-  const name = scripts[i % scripts.length];
+  const user = users[i % users.length]!;
+  const name = scripts[i % scripts.length]!;
   const submittedAt = now - (i * 17 + 3) * MIN;
-  const priority = [4, 2, 5, 1, 3, 3, 4, 2][i % 8];
-  const worker = workersList[i % workersList.length];
+  const priority = [4, 2, 5, 1, 3, 3, 4, 2][i % 8]!;
+  const worker = workersList[i % workersList.length]!;
   const reached = ["PENDING", "QUEUED", "ASSIGNED", "RUNNING", "COMPLETED"];
   const idx = status === "FAILED" ? 3 : status === "CANCELLED" ? 1 : reached.indexOf(status);
   const events: JobEvent[] = [{ t: submittedAt, kind: "SUBMITTED", text: `Job submitted by ${user}` }];
