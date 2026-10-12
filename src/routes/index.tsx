@@ -4,11 +4,14 @@ import { AppShell, PageHeader } from "@/components/fairlane/AppShell";
 import { StatusBadge } from "@/components/fairlane/StatusBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
+import { relTime, useJobs } from "@/lib/job-store";
+import { canCancel } from "@/lib/job-validation";
+import { openNewJob } from "@/components/fairlane/NewJobDialog";
+import { btn } from "@/components/fairlane/buttons";
 import {
   availabilityTone,
   completedFailedTone,
   jobCounts,
-  recentJobs,
   utilizationTone,
   workerNodes,
 } from "@/lib/overview-data";
@@ -30,7 +33,8 @@ const bgTone = { secondary: "bg-secondary", warning: "bg-warning", error: "bg-er
 
 function Overview() {
   const [empty, setEmpty] = useState(false);
-  const jobs = empty ? [] : recentJobs;
+  const store = useJobs();
+  const jobs = empty ? [] : store.slice(0, 5);
   const nodes = empty ? [] : workerNodes;
   const c = jobCounts;
   const cards = [
@@ -49,10 +53,13 @@ function Overview() {
     <AppShell>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeader title="Overview" subtitle="Real-time GPU orchestration for academic labs" />
+        <div className="flex items-center gap-4">
+        <button className={btn("primary")} onClick={openNewJob}>+ New Job</button>
         <label className="flex items-center gap-2 text-caption text-muted-foreground">
           <Switch checked={empty} onCheckedChange={setEmpty} />
           Preview empty states
         </label>
+        </div>
       </div>
 
       <TooltipProvider delayDuration={150}>
@@ -80,7 +87,7 @@ function Overview() {
           </Link>
         </div>
         {jobs.length === 0 ? (
-          <EmptyState icon="📋" iconTone="text-muted-foreground" title="No recent jobs to display" sub="Submit your first job to see activity here" action="Submit Job" variant="secondary" />
+          <EmptyState icon="📋" iconTone="text-muted-foreground" title="No recent jobs to display" sub="Submit your first job to see activity here" action="Submit Job" variant="secondary" onAction={openNewJob} />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left">
@@ -94,17 +101,14 @@ function Overview() {
               <tbody>
                 {jobs.map((j) => (
                   <tr key={j.id} className="border-t border-border bg-card/50 transition-colors last:border-b hover:bg-card">
-                    <td className="w-20 whitespace-nowrap px-4 py-3 font-mono text-caption text-subtle-foreground">{j.id}</td>
+                    <td className="w-20 whitespace-nowrap px-4 py-3 font-mono text-caption text-subtle-foreground"><Link to="/jobs/$jobId" params={{ jobId: j.id }} className="hover:text-primary">{j.id}</Link></td>
                     <td className="max-w-32 truncate px-4 py-3 text-label text-foreground">{j.name}</td>
                     <td className="max-w-40 truncate px-4 py-3 text-label text-subtle-foreground">{j.user}</td>
                     <td className="px-4 py-3"><StatusBadge status={j.status} /></td>
-                    <td className="whitespace-nowrap px-4 py-3 text-label text-muted-foreground">{j.submitted}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-label text-muted-foreground" suppressHydrationWarning>{relTime(j.submittedAt)}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center space-x-2 whitespace-nowrap">
-                        <button className="text-caption text-primary hover:text-primary/75">View Logs</button>
-                        {(j.status === "QUEUED" || j.status === "RUNNING") && (
-                          <button className="text-caption text-error hover:text-error/75">Cancel</button>
-                        )}
+                        <Link to="/jobs/$jobId" params={{ jobId: j.id }} className="text-caption text-primary hover:text-primary/75">View Details</Link>
                       </div>
                     </td>
                   </tr>
@@ -150,14 +154,15 @@ function Overview() {
   );
 }
 
-function EmptyState(p: { icon: string; iconTone: string; title: string; sub: string; action: string; variant: "primary" | "secondary" }) {
+function EmptyState(p: { icon: string; iconTone: string; title: string; sub: string; action: string; variant: "primary" | "secondary"; onAction?: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
       <span className={`text-5xl ${p.iconTone}`}>{p.icon}</span>
       <p className="mt-3 text-subtle-foreground">{p.title}</p>
       <p className="text-caption text-muted-foreground">{p.sub}</p>
       <button
-        className={`mt-4 rounded-md px-4 py-2 text-label transition-colors focus:outline-none focus:ring-2 focus:ring-ring ${p.variant === "primary" ? "bg-primary text-primary-foreground hover:bg-primary/85" : "bg-secondary text-secondary-foreground hover:bg-secondary/85"}`}
+        onClick={p.onAction}
+        className={`mt-4 rounded-md px-4 py-2 text-label transition-colors focus:outline-none focus:ring-2 focus:ring-ring ${p.variant === "primary" ? "bg-primary text-primary-foreground hover:bg-primary/85" : "bg-surface text-foreground hover:bg-hover"}`}
       >
         {p.action}
       </button>
