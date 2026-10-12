@@ -94,7 +94,7 @@ function Overview() {
               <tbody>
                 {jobs.map((j) => (
                   <tr key={j.id} className="border-t border-border bg-card/50 transition-colors last:border-b hover:bg-card">
-                    <td className="w-20 px-4 py-3 font-mono text-caption text-subtle-foreground">{j.id}</td>
+                    <td className="w-20 whitespace-nowrap px-4 py-3 font-mono text-caption text-subtle-foreground">{j.id}</td>
                     <td className="max-w-32 truncate px-4 py-3 text-label text-foreground">{j.name}</td>
                     <td className="max-w-40 truncate px-4 py-3 text-label text-subtle-foreground">{j.user}</td>
                     <td className="px-4 py-3"><StatusBadge status={j.status} /></td>
