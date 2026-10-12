@@ -1,24 +1,62 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { AppShell, PageHeader } from "@/components/fairlane/AppShell";
+import { JobTable } from "@/components/fairlane/JobTable";
+import { WorkerTable } from "@/components/fairlane/WorkerTable";
+import { historyJobs, queueJobs, stats } from "@/lib/sample-data";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title: "Overview — Fairlane GPU Orchestration" },
+      { name: "description", content: "Fair, fault-tolerant GPU job scheduling dashboard for academic labs." },
+      { property: "og:title", content: "Overview — Fairlane GPU Orchestration" },
+      { property: "og:description", content: "Fair, fault-tolerant GPU job scheduling dashboard for academic labs." },
+    ],
+  }),
+  component: Dashboard,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+const tabs = ["Job Queue", "Worker Status", "Job History"] as const;
+
+function Dashboard() {
+  const [tab, setTab] = useState<(typeof tabs)[number]>("Job Queue");
+  const cards = [
+    { title: "Total Jobs", value: String(stats.totalJobs), label: "Submitted this week", color: "text-primary" },
+    { title: "Active Workers", value: `${stats.activeWorkers}`, label: `Online/Total (${stats.activeWorkers}/${stats.totalWorkers})`, color: "text-secondary" },
+    { title: "Avg GPU Util", value: `${stats.avgGpuUtil}%`, label: "Across all nodes", color: "text-warning" },
+    { title: "Queue Length", value: String(stats.queueLength), label: "Jobs waiting", color: stats.queueLength > 20 ? "text-error" : "text-warning" },
+  ];
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <AppShell>
+      <PageHeader title="Overview" subtitle="Real-time GPU orchestration for academic labs" />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {cards.map((c) => (
+          <div key={c.title} className="rounded-lg border border-border bg-card p-4">
+            <p className="text-label text-subtle-foreground">{c.title}</p>
+            <p className={`text-h3 ${c.color}`}>{c.value}</p>
+            <p className="text-muted-foreground">{c.label}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-8 flex border-b border-border">
+        {tabs.map((t) => (
+          <button
+            key={t}
+            onClick={() => setTab(t)}
+            className={`inline-flex items-center border-b-2 px-4 py-2 text-label transition-colors hover:border-primary hover:text-foreground ${tab === t ? "border-primary text-primary" : "border-transparent text-subtle-foreground"}`}
+          >
+            {t}
+          </button>
+        ))}
+      </div>
+      <div className="mt-4">
+        {tab === "Job Queue" && <JobTable jobs={queueJobs} />}
+        {tab === "Worker Status" && <WorkerTable />}
+        {tab === "Job History" && <JobTable jobs={historyJobs} />}
+      </div>
+      <p className="mt-4 text-caption text-muted-foreground">Sample data shown — live scheduler connection coming in a later phase.</p>
+    </AppShell>
   );
 }
