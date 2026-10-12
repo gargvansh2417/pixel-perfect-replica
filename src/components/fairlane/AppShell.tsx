@@ -29,7 +29,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen bg-background pb-10">
       {open && <div className="fixed inset-0 z-30 bg-background/70 md:hidden" onClick={() => setOpen(false)} />}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-sidebar-border bg-sidebar transition-transform md:static md:w-1/5 md:min-w-52 md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-sidebar-border bg-sidebar transition-transform md:static md:w-1/5 md:min-w-52 md:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}
       >
         <div className="flex h-[60px] items-center justify-between border-b border-sidebar-border px-4">
           <span className="text-h2 text-primary">Fairlane</span>
