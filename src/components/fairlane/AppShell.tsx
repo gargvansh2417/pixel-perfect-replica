@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { BarChart3, ChevronDown, Gauge, ListChecks, Menu, Search, Server, SlidersHorizontal, X } from "lucide-react";
 import { PURPOSE } from "@/lib/sample-data";
+import { NewJobDialog, openNewJob } from "./NewJobDialog";
+import { btn } from "./buttons";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: Gauge },
@@ -70,13 +72,15 @@ export function AppShell({ children }: { children: ReactNode }) {
               className="h-9 w-full rounded-md border border-input bg-card pl-9 pr-3 text-label text-subtle-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
             />
           </div>
-          <button className="flex items-center gap-2 text-foreground">
+          <button className={`${btn("primary")} hidden shrink-0 sm:inline-flex`} onClick={openNewJob}>+ New Job</button>
+          <button className="flex shrink-0 items-center gap-2 text-foreground">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-label text-primary-foreground">VG</span>
             <span className="hidden sm:inline">vansh</span>
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </button>
         </header>
-        <main className="flex-1 p-6">{children}</main>
+        <main className="min-w-0 flex-1 p-6">{children}</main>
+        <NewJobDialog />
       </div>
 
       <footer className="fixed inset-x-0 bottom-0 z-20 flex h-10 items-center justify-between border-t border-card bg-background px-4">
