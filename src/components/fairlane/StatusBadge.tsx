@@ -13,7 +13,7 @@ const map: Record<string, string> = {
   HEALTHY: "bg-status-completed text-status-completed-fg",
   DRAINING: "bg-status-queued text-status-queued-fg",
   DEGRADED: "bg-status-queued text-status-queued-fg",
-  OFFLINE: "bg-status-failed text-status-failed-fg",
+  OFFLINE: "bg-status-cancelled text-status-cancelled-fg",
   DEAD: "bg-status-failed text-status-failed-fg",
 };
 
