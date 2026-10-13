@@ -79,6 +79,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             <ChevronDown className="h-4 w-4 text-muted-foreground" />
           </button>
         </header>
+        <div role="status" className="border-b border-warning bg-warning/20 px-4 py-2 text-center text-label text-warning">
+          ⚠️ USING MOCK BACKEND - DATA NOT PERSISTENT
+        </div>
         <main className="min-w-0 flex-1 p-6">{children}</main>
         <NewJobDialog />
       </div>
