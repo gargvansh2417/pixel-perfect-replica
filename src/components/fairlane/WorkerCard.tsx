@@ -69,9 +69,9 @@ export function WorkerCard({ w, onAction }: { w: WorkerTelemetry; onAction: (a: 
 
   return (
     <div className={`flex min-h-96 flex-col rounded-lg border bg-card/50 p-6 shadow-sm transition-colors duration-200 hover:bg-card hover:shadow-md ${sample ? "border-dashed border-input" : "border-border"}`}>
-      <div className="mb-4 flex items-center justify-between gap-2">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <Tip tip="Unique identifier for this worker node">
-          <span className="cursor-help truncate font-mono text-xl font-semibold text-foreground">{w.hostname}</span>
+          <span className="cursor-help break-all font-mono text-lg font-semibold text-foreground">{w.hostname}</span>
         </Tip>
         <span className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-label ${stateBadge[w.state]}`}>{w.state}</span>
       </div>
