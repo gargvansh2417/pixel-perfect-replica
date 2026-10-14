@@ -12,9 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as SettingsRouteImport } from './routes/settings'
-import { Route as WorkersRouteImport } from './routes/workers'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
+import { Route as WorkersIndexRouteImport } from './routes/workers.index'
+import { Route as WorkersHostnameRouteImport } from './routes/workers.$hostname'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -31,11 +32,6 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkersRoute = WorkersRouteImport.update({
-  id: '/workers',
-  path: '/workers',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const JobsIndexRoute = JobsIndexRouteImport.update({
   id: '/jobs/',
   path: '/jobs/',
@@ -46,55 +42,83 @@ const JobsJobIdRoute = JobsJobIdRouteImport.update({
   path: '/jobs/$jobId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const WorkersIndexRoute = WorkersIndexRouteImport.update({
+  id: '/workers/',
+  path: '/workers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WorkersHostnameRoute = WorkersHostnameRouteImport.update({
+  id: '/workers/$hostname',
+  path: '/workers/$hostname',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/settings': typeof SettingsRoute
-  '/workers': typeof WorkersRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/workers/$hostname': typeof WorkersHostnameRoute
   '/jobs/': typeof JobsIndexRoute
+  '/workers/': typeof WorkersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/settings': typeof SettingsRoute
-  '/workers': typeof WorkersRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/workers/$hostname': typeof WorkersHostnameRoute
   '/jobs': typeof JobsIndexRoute
+  '/workers': typeof WorkersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/analytics': typeof AnalyticsRoute
   '/settings': typeof SettingsRoute
-  '/workers': typeof WorkersRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/workers/$hostname': typeof WorkersHostnameRoute
   '/jobs/': typeof JobsIndexRoute
+  '/workers/': typeof WorkersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/analytics' | '/settings' | '/workers' | '/jobs/$jobId' | '/jobs/'
+    | '/'
+    | '/analytics'
+    | '/settings'
+    | '/jobs/$jobId'
+    | '/workers/$hostname'
+    | '/jobs/'
+    | '/workers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analytics' | '/settings' | '/workers' | '/jobs/$jobId' | '/jobs'
+  to:
+    | '/'
+    | '/analytics'
+    | '/settings'
+    | '/jobs/$jobId'
+    | '/workers/$hostname'
+    | '/jobs'
+    | '/workers'
   id:
     | '__root__'
     | '/'
     | '/analytics'
     | '/settings'
-    | '/workers'
     | '/jobs/$jobId'
+    | '/workers/$hostname'
     | '/jobs/'
+    | '/workers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AnalyticsRoute: typeof AnalyticsRoute
   SettingsRoute: typeof SettingsRoute
-  WorkersRoute: typeof WorkersRoute
   JobsJobIdRoute: typeof JobsJobIdRoute
+  WorkersHostnameRoute: typeof WorkersHostnameRoute
   JobsIndexRoute: typeof JobsIndexRoute
+  WorkersIndexRoute: typeof WorkersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -120,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workers': {
-      id: '/workers'
-      path: '/workers'
-      fullPath: '/workers'
-      preLoaderRoute: typeof WorkersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/jobs/': {
       id: '/jobs/'
       path: '/jobs'
@@ -141,6 +158,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JobsJobIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/workers/': {
+      id: '/workers/'
+      path: '/workers'
+      fullPath: '/workers/'
+      preLoaderRoute: typeof WorkersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/workers/$hostname': {
+      id: '/workers/$hostname'
+      path: '/workers/$hostname'
+      fullPath: '/workers/$hostname'
+      preLoaderRoute: typeof WorkersHostnameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -148,9 +179,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnalyticsRoute: AnalyticsRoute,
   SettingsRoute: SettingsRoute,
-  WorkersRoute: WorkersRoute,
   JobsJobIdRoute: JobsJobIdRoute,
+  WorkersHostnameRoute: WorkersHostnameRoute,
   JobsIndexRoute: JobsIndexRoute,
+  WorkersIndexRoute: WorkersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
